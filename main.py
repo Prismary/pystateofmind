@@ -17,12 +17,23 @@ def get_stat(type):
 			'''SELECT count(*) FROM "main.Mind";'''
         )
         return cursor.fetchone()[0]
+    elif type == 'mre':
+        cursor.execute(
+			'''SELECT Timestamp FROM "main.Mind"
+            WHERE DayID = (SELECT MAX(DayID) FROM "main.Mind");'''
+        )
+
+        try:
+            return time.ctime(cursor.fetchone()[0])
+        except:
+            return '..'
     else:
         return '???'
 
 # Program routine
 print('''Welcome back to pyStateOfMind.
-You are currently on day {} of your mental records.'''.format(str(get_stat('day')+1)))
+You are currently on day {} of your mental records.
+The most recent entry has been submitted on {}.'''.format(str(get_stat('day')+1), get_stat('mre')))
 print(
     '''
     ╔════════════╤═════════╤════════════╗
